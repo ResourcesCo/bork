@@ -1,14 +1,9 @@
-const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
-const json = require('koa-json');
-const static = require('koa-static');
-const router = require('koa-route');
+const express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const serveStatic = require('serve-static');
+const router = require('express-promise-router')();
 const superagent = require('superagent');
-
-const app = new Koa();
-app.use(static('./build'));
-app.use(bodyParser());
-app.use(json());
 
 function headerArray(headers) {
   const arr = [];
@@ -24,9 +19,9 @@ function headerArray(headers) {
   return arr;
 }
 
-app.use(router.post('/api/requests', async (ctx) => {
+router.post('/api/requests', async (req, res) => {
   try {
-    const {method, url, headers, body} = ctx.request.body;
+    const {method, url, headers, body} = req.body;
     const apiReq = superagent(method, url).timeout({
       response: 5000,  // Wait 5 seconds for the server to start sending,
       deadline: 60000, // but allow 1 minute for the file to finish loading.
@@ -38,18 +33,22 @@ app.use(router.post('/api/requests', async (ctx) => {
       apiReq.send(body || '');
     }
     const apiResp = await apiReq;
-    ctx.status = 200;
-    ctx.body = {
+    res.send({
       status: apiResp.status,
       headers: headerArray(apiResp.headers),
       body: apiResp.body,
-    };
+    });
   } catch (err) {
     console.error('Error making API request:', err);
-    ctx.status = 500;
-    ctx.body = {error: `Error making API request: ${err}`};
+    res.status(500).send({error: `Error making API request: ${err}`});
   }
-}));
+});
+
+const app = express();
+app.use(morgan('dev'));
+app.use(serveStatic('./build'));
+app.use(bodyParser.json());
+app.use(router);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
