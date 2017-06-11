@@ -110,7 +110,7 @@ class RequestBuilder extends Component {
         <h4>Request Body</h4>
         <FormGroup>
           <Col sm={12}>
-            <FormControl componentClass="textarea" rows={6} />
+            <FormControl componentClass="textarea" rows={10} />
           </Col>
         </FormGroup>
       </div>
@@ -158,7 +158,7 @@ class RequestBuilder extends Component {
         <h4>Response Body</h4>
         <FormGroup>
           <Col sm={12}>
-            <FormControl componentClass="textarea" rows={6} value={display} onChange={() => {}} />
+            <FormControl componentClass="textarea" rows={10} value={display} onChange={() => {}} />
           </Col>
         </FormGroup>
       </div>
