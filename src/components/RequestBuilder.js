@@ -1,20 +1,12 @@
-import React, { Component } from 'react';
-import EndpointPicker from './EndpointPicker';
-import PairList from './PairList';
-import { Form, Nav, NavItem, FormGroup, Col, FormControl, Label, Checkbox } from 'react-bootstrap';
-import superagent from 'superagent';
+import React, { Component } from 'react'
+import EndpointPicker from './EndpointPicker'
+import PairList from './PairList'
+import { Form, Nav, NavItem, FormGroup, Col, FormControl, Label, Checkbox } from 'react-bootstrap'
+import superagent from 'superagent'
 
 class RequestBuilder extends Component {
-  static defaultProps = {
-    apiUrl: '/api'
-  };
-
-  static propTypes = {
-    apiUrl: React.PropTypes.string.isRequired
-  }
-
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       method: 'GET',
       url: '',
@@ -25,32 +17,32 @@ class RequestBuilder extends Component {
         { name: 'accept', value: 'application/json' },
         { name: 'content-type', value: 'application/json' },
       ],
-    };
+    }
   }
 
   componentWillUnmount() {
-    this.request && this.request.abort();
+    this.request && this.request.abort()
   }
 
   handleChange(changes) {
-    this.setState(changes);
+    this.setState(changes)
   }
 
   requestData() {
-    const {method, url, headers} = this.state;
-    return {method, url, headers};
+    const {method, url, headers} = this.state
+    return {method, url, headers}
   }
 
   handleSend() {
     this.setState({
       isLoading: true,
       error: null,
-    });
+    })
 
     const headers = {
       'accept': 'application/json',
       'content-type': 'application/json'
-    };
+    }
     this.request = superagent
       .post(`${this.props.apiUrl}/requests`)
       .set(headers)
@@ -61,27 +53,27 @@ class RequestBuilder extends Component {
             response: resp.body,
             activeTab: 'response',
             isLoading: false,
-          });
+          })
         } else {
           this.setState({
             error: (resp.body !== null && typeof resp.body === 'object') ? resp.body.error : resp.body,
             activeTab: 'response',
             isLoading: false,
-          });
+          })
         }
       }).catch(err => {
-        console.error(err);
+        console.error(err)
         this.setState({
           error: err,
           response: null,
           activeTab: 'response',
           isLoading: false,
-        });
-      });
+        })
+      })
   }
 
   render() {
-    const exampleUrl = "https://api.github.com/users/okfn"; // eslint-disable-line no-template-curly-in-string
+    const exampleUrl = "https://api.github.com/users/okfn" // eslint-disable-line no-template-curly-in-string
     return (
       <Col sm={12}>
         <Form horizontal>
@@ -101,7 +93,7 @@ class RequestBuilder extends Component {
           </div>
         </Form>
       </Col>
-    );
+    )
   }
 
   renderRequestBody() {
@@ -134,13 +126,13 @@ class RequestBuilder extends Component {
           There was an error making the request.
         </Col>
       </FormGroup>
-    );
+    )
   }
 
   renderResponse() {
-    const {status, headers, body} = this.state.response;
-    const statusStyle = status >= 400 ? 'danger' : (status >= 300 ? 'info' : 'success');
-    const display = JSON.stringify(body, null, 2);
+    const {status, headers, body} = this.state.response
+    const statusStyle = status >= 400 ? 'danger' : (status >= 300 ? 'info' : 'success')
+    const display = JSON.stringify(body, null, 2)
     return (
       <div>
         <FormGroup>
@@ -166,4 +158,4 @@ class RequestBuilder extends Component {
   }
 }
 
-export default RequestBuilder;
+export default RequestBuilder

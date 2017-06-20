@@ -2,22 +2,6 @@ import React, { Component } from 'react';
 import { FormGroup, Col, FormControl, InputGroup, Button, Glyphicon } from 'react-bootstrap';
 
 class Pair extends Component {
-  static defaultProps = {
-    name: '',
-    value: '',
-    editable: true,
-  };
-
-  static propTypes = {
-    name: React.PropTypes.string.isRequired,
-    value: React.PropTypes.string.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    onDelete: React.PropTypes.func.isRequired,
-    editable: React.PropTypes.bool.isRequired,
-  };
-
-  static EMPTY = { name: '', value: '' }
-
   constructor(props) {
     super(props);
     this.handleDelete = this.handleDelete.bind(this);
@@ -32,13 +16,14 @@ class Pair extends Component {
   }
 
   render() {
-    const valueInput = this.props.editable ?
+    const editable = 'editable' in this.props ? this.props.editable : true
+    const valueInput = editable ?
       (
         <InputGroup>
           <FormControl type="text" placeholder="Value" value={this.props.value} onChange={e => this.handleChange({value: e.target.value})} />
-          {this.props.editable && (<InputGroup.Button>
+          <InputGroup.Button>
             <Button onClick={this.handleDelete}><Glyphicon glyph="minus"/></Button>
-          </InputGroup.Button>)}
+          </InputGroup.Button>
         </InputGroup>
       ) :
       (
@@ -58,16 +43,6 @@ class Pair extends Component {
 }
 
 class PairList extends Component {
-  static defaultProps = {
-    editable: true,
-  }
-
-  static propTypes = {
-    value: React.PropTypes.array,
-    onChange: React.PropTypes.func.isRequired,
-    editable: React.PropTypes.bool.isRequired,
-  }
-
   handleDelete(index) {
     const newValue = this.props.value.slice();
     newValue.splice(index, 1);
@@ -85,13 +60,14 @@ class PairList extends Component {
   }
 
   render() {
+    const editable = 'editable' in this.props ? this.props.editable : true
     return (
       <div>
         {
           this.props.value.map((pair, index) => (
             <Pair key={index} name={pair.name} value={pair.value}
               onChange={(value) => this.handleChange(index, value)}
-              onDelete={() => this.handleDelete(index)} editable={this.props.editable} />
+              onDelete={() => this.handleDelete(index)} editable={editable} />
           ))
         }
         {this.props.editable && (<FormGroup>

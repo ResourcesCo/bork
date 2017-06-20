@@ -3,22 +3,8 @@ import { FormGroup, Col, InputGroup, DropdownButton, MenuItem,
          FormControl, Modal, ButtonGroup, Button } from 'react-bootstrap';
 
 class EndpointPicker extends Component {
-  static defaultProps = {
-    method: 'GET',
-    url: '',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    extraMethods: ['HEAD', 'OPTIONS', 'CONNECT'],
-    isLoading: false,
-  };
-
-  static propTypes = {
-    method: React.PropTypes.string.isRequired,
-    url: React.PropTypes.string,
-    methods: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    extraMethods: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    onSend: React.PropTypes.func.isRequired,
-  };
+  static METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+  static EXTRA_METHODS = ['HEAD', 'OPTIONS', 'CONNECT']
 
   constructor(props) {
     super(props);
@@ -49,7 +35,7 @@ class EndpointPicker extends Component {
           <InputGroup>
             <DropdownButton id="method" componentClass={InputGroup.Button} onSelect={(eventKey) => this.handleMethodSelect(eventKey)} title={this.props.method}>
               {
-                this.props.methods.map(method => (
+                EndpointPicker.METHODS.map(method => (
                   <MenuItem key={method} eventKey={method}>{method}</MenuItem>
                 ))
               }
@@ -59,7 +45,7 @@ class EndpointPicker extends Component {
             <InputGroup.Button>
               <Button bsStyle="primary" onClick={() => this.props.isLoading || this.props.onSend()} disabled={this.props.isLoading}>Send</Button>
             </InputGroup.Button>
-            <SelectMethodModal showMethodModal={this.state.showMethodModal} value={this.props.method} methods={this.props.methods} extraMethods={this.props.extraMethods} onHide={() => this.setState({showMethodModal: false})} onChange={(method) => this.handleMethodSelect(method)} />
+            <SelectMethodModal showMethodModal={this.state.showMethodModal} value={this.props.method} onHide={() => this.setState({showMethodModal: false})} onChange={(method) => this.handleMethodSelect(method)} />
           </InputGroup>
         </Col>
       </FormGroup>
@@ -68,14 +54,6 @@ class EndpointPicker extends Component {
 }
 
 class SelectMethodModal extends Component {
-  static propTypes = {
-    onChange: React.PropTypes.func.isRequired, // controlled component
-    onHide: React.PropTypes.func.isRequired, // controlled component
-    value: React.PropTypes.string,
-    methods: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    extraMethods: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -85,8 +63,8 @@ class SelectMethodModal extends Component {
   }
 
   isCustomMethod(method) {
-    return !(this.props.methods.includes(method) ||
-             this.props.extraMethods.includes(method));
+    return !(EndpointPicker.METHODS.includes(method) ||
+             EndpointPicker.EXTRA_METHODS.includes(method));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -145,7 +123,7 @@ class SelectMethodModal extends Component {
           <FormGroup>
             <ButtonGroup>
               {
-                this.props.methods.map(method => (
+                EndpointPicker.METHODS.map(method => (
                   <Button key={method} onClick={() => this.handleSelect(method)}>{method}</Button>
                 ))
               }
@@ -154,7 +132,7 @@ class SelectMethodModal extends Component {
           <FormGroup>
             <ButtonGroup>
               {
-                this.props.extraMethods.map(method => (
+                EndpointPicker.EXTRA_METHODS.map(method => (
                   <Button key={method} onClick={() => this.handleSelect(method)}>{method}</Button>
                 ))
               }

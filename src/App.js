@@ -19,7 +19,7 @@ class App extends Component {
         </Navbar>
         <Grid>
           <Row>
-            <RequestBuilder />
+            <RequestBuilder apiUrl="/api" />
           </Row>
         </Grid>
       </div>
