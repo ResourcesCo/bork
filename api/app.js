@@ -32,6 +32,7 @@ router.post('/api/requests', async (req, res) => {
     if (!['GET', 'HEAD', 'DELETE'].includes(method) || (body && body !== '')) {
       apiReq.send(body || '');
     }
+    apiReq.ok(res => res.status);
     const apiResp = await apiReq;
     res.send({
       status: apiResp.status,
