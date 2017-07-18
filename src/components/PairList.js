@@ -56,7 +56,7 @@ class PairList extends Component {
   }
 
   handleAdd() {
-    this.props.onChange(this.props.value.concat([Pair.EMPTY]));
+    this.props.onChange(this.props.value.concat([{name: '', value: ''}]));
   }
 
   render() {
@@ -70,7 +70,7 @@ class PairList extends Component {
               onDelete={() => this.handleDelete(index)} editable={editable} />
           ))
         }
-        {this.props.editable && (<FormGroup>
+        {editable && (<FormGroup>
           <Col sm={12}>
             <Button onClick={() => this.handleAdd()}><Glyphicon glyph="plus" /> Add</Button>
           </Col>
