@@ -15,30 +15,37 @@ class Pair extends Component {
     this.props.onChange(changes);
   }
 
-  render() {
-    const editable = 'editable' in this.props ? this.props.editable : true
-    const valueInput = editable ?
-      (
-        <InputGroup>
-          <FormControl type="text" placeholder="Value" value={this.props.value} onChange={e => this.handleChange({value: e.target.value})} />
-          <InputGroup.Button>
-            <Button onClick={this.handleDelete}><Glyphicon glyph="minus"/></Button>
-          </InputGroup.Button>
-        </InputGroup>
-      ) :
-      (
-        <FormControl type="text" placeholder="Value" value={this.props.value} onChange={e => this.handleChange({value: e.target.value})} />
-      );
+  renderEditable() {
+    return (
+      <FormGroup className="key-value-bubble">
+        <Col sm={12}>          
+          <InputGroup>
+            <FormControl type="text" name="name" placeholder="Name" value={this.props.name} onChange={e => this.handleChange({name: e.target.value})} />
+            <FormControl type="text" name="value" placeholder="Value" value={this.props.value} onChange={e => this.handleChange({value: e.target.value})} />
+            <InputGroup.Button>
+              <Button onClick={this.handleDelete}><Glyphicon glyph="minus"/></Button>
+            </InputGroup.Button>
+          </InputGroup>
+        </Col>
+      </FormGroup>
+    );
+  }
+
+  renderStatic() {
     return (
       <FormGroup>
         <Col sm={3}>
-          <FormControl type="text" placeholder="Name" value={this.props.name} onChange={e => this.handleChange({name: e.target.value})} />
+          <FormControl type="text" name="name" placeholder="Name" value={this.props.name} onChange={e => this.handleChange({name: e.target.value})} />
         </Col>
         <Col sm={9}>
-          {valueInput}
+          <FormControl type="text" name="value" placeholder="Value" value={this.props.value} onChange={e => this.handleChange({value: e.target.value})} />
         </Col>
       </FormGroup>
-    )
+    );
+  }
+
+  render() {
+    return this.props.editable ? this.renderEditable() : this.renderStatic();
   }
 }
 
